@@ -1,0 +1,44 @@
+package selenideTests;
+
+import Pages.ConfigReader;
+import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.logevents.SelenideLogger;
+import io.qameta.allure.selenide.AllureSelenide;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import static com.codeborne.selenide.WebDriverRunner.setWebDriver;
+
+
+public class BaseTests {
+
+    String baseUrl = ConfigReader.getProperty("baseUrl");
+    @BeforeAll
+    public static void setup() {
+        SelenideLogger.addListener("AllureSelenide", new AllureSelenide().screenshots(true).savePageSource(true));
+    }
+
+    @BeforeEach
+    public void option() {
+        Configuration.timeout = 40000;
+        Configuration.browser = "chrome";
+
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--disable-extensions");
+
+        DesiredCapabilities capabilities = new DesiredCapabilities();
+        capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+        Configuration.browserCapabilities = capabilities;
+
+        System.setProperty("webdriver.Chrome.driver",
+                "C:\\Users\\Public\\webDriver\\chromedriver-win64\\chromedriver.exe");
+        WebDriver driver;
+        driver = new ChromeDriver(options);
+        setWebDriver(driver);
+    }
+
+ }
+

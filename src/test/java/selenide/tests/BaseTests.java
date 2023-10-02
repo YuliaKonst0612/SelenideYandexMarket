@@ -1,6 +1,8 @@
-package selenideTests;
+package selenide.tests;
 
-import Pages.ConfigReader;
+import com.codeborne.selenide.junit5.ScreenShooterExtension;
+import org.junit.jupiter.api.extension.ExtendWith;
+import pages.ConfigReader;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.logevents.SelenideLogger;
 import io.qameta.allure.selenide.AllureSelenide;
@@ -10,12 +12,13 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
+
 import static com.codeborne.selenide.WebDriverRunner.setWebDriver;
 
-
+@ExtendWith(ScreenShooterExtension.class)
 public class BaseTests {
-
     String baseUrl = ConfigReader.getProperty("baseUrl");
+
     @BeforeAll
     public static void setup() {
         SelenideLogger.addListener("AllureSelenide", new AllureSelenide().screenshots(true).savePageSource(true));
@@ -33,12 +36,16 @@ public class BaseTests {
         capabilities.setCapability(ChromeOptions.CAPABILITY, options);
         Configuration.browserCapabilities = capabilities;
 
+        //драйвер из системной переменной
         System.setProperty("webdriver.Chrome.driver",
-                "C:\\Users\\Public\\webDriver\\chromedriver-win64\\chromedriver.exe");
+                System.getenv("CHROMEDRIVER"));
+
+
+//        System.setProperty("webdriver.Chrome.driver",
+//                "C:\\Users\\Public\\webDriver\\chromedriver-win64\\chromedriver.exe");
         WebDriver driver;
         driver = new ChromeDriver(options);
         setWebDriver(driver);
     }
-
- }
+}
 
